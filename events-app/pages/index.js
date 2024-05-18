@@ -27,7 +27,7 @@ export default function Home({data}) {
           data.map((ev) => {
             return (
               <a key={ev.id} href={`/events/${ev.id}`}>
-                <Image src={ev.image} alt={ev.title} width={200} height={200} />
+                <Image src={ev.image} alt={ev.title} width={300} height={300} />
                 <h2>{ev.title}</h2>
                 <p>{ev.description}</p>
               </a>
