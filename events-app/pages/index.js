@@ -5,7 +5,7 @@ import styles from "@/styles/Home.module.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function Home() {
+export default function Home({data}) {
   return (
     <>
       <Head>
@@ -23,13 +23,32 @@ export default function Home() {
         </nav>
       </header>
       <main className={styles.main}>
-        <a href="#">
-          <img />
-        </a>
+        {
+          data.map((ev) => {
+            return (
+              <a key={ev.id} href={`/events/${ev.id}`}>
+                <Image src={ev.image} alt={ev.title} width={200} height={200} />
+                <h2>{ev.title}</h2>
+                <p>{ev.description}</p>
+              </a>
+            )
+          })
+        }
       </main>
       <footer className={styles.footer}>
         <p>&copy; 2024 - Esideas - Events App</p>
       </footer>
     </>
   );
+}
+
+export async function getServerSideProps() {
+  const {events_categories} = await import('../data/data.json');
+  //console.log(events_categories);
+
+  return {
+    props: {
+      data: events_categories,
+    },
+  };
 }
