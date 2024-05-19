@@ -1,12 +1,7 @@
 import Head from "next/head";
-import Image from "next/image";
-import { Inter } from "next/font/google";
-import styles from "@/styles/Home.module.css";
-import Link from "next/link";
+import HomePage from "@/src/components/home/home-page";
 
-const inter = Inter({ subsets: ["latin"] });
-
-export default function Home({data}) {
+export default function Home({ data }) {
   return (
     <>
       <Head>
@@ -15,36 +10,13 @@ export default function Home({data}) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <header className={styles.header}>
-        <nav>
-          <img />
-          <a href="/">Home</a>
-          <a href="/about-us">About Us</a>
-          <a href="/events">Events</a>
-        </nav>
-      </header>
-      <main className={styles.main}>
-        {
-          data.map((ev) => {
-            return (
-              <Link key={ev.id} href={`/events/${ev.id}`}>
-                <Image src={ev.image} alt={ev.title} width={300} height={300} />
-                <h2>{ev.title}</h2>
-                <p>{ev.description}</p>
-              </Link>
-            )
-          })
-        }
-      </main>
-      <footer className={styles.footer}>
-        <p>&copy; 2024 - Esideas - Events App</p>
-      </footer>
+      <HomePage data={data} />
     </>
   );
 }
 
 export async function getServerSideProps() {
-  const {events_categories} = await import('../data/data.json');
+  const { events_categories } = await import("../data/data.json");
   //console.log(events_categories);
 
   return {
