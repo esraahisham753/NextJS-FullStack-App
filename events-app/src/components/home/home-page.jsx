@@ -12,7 +12,7 @@ const HomePage = ({ data }) => {
                 className="card-img"
                 src={ev.image}
                 alt={ev.title}
-                width={300}
+                width={400}
                 height={300}
               />
             </div>

@@ -8,6 +8,14 @@ header
   justify-content: space-between
   color: #141E46
 
+  >div
+    width: 100%
+    max-width: 1250px
+    padding: 20px
+    margin: auto
+    justify-content: space-between
+    align-items: center
+
   h2
     width: 60%
     text-transform: uppercase
@@ -43,8 +51,9 @@ footer
 main
   width: 100%
   max-width: 1250px
-  padding: 20px
+  padding: 80px 30px
   margin: auto
+  min-height: 550px
 
   .home_body
     display: flex
@@ -53,6 +62,7 @@ main
 
     .card
       display: flex
+      width: 100%
       gap: 30px
       justify-content: center
       align-items: center
@@ -64,9 +74,22 @@ main
 
       &:nth-child(even)
         direction: rtl
+        text-align: left
 
       .image
         width: 40%
       
       .content
         width: 50%
+
+  .about_us_list
+    list-style-type: none
+    padding-left: 3rem
+    display: flex
+    flex-direction: column
+  
+  .events_page
+    
+
+  h1, h2, h3
+    margin: 1.75rem 0
