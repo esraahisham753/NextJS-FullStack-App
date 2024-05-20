@@ -1,14 +1,14 @@
-import Footer from "../footer/footer"
-import Header from "../header/header"
+import Footer from "../footer/footer";
+import Header from "../header/header";
 
-const MainLayout = ({children}) => {
+const MainLayout = ({ children }) => {
   return (
     <>
-     <Header />
-     {children}
-     <Footer /> 
+      <Header />
+      <main>{children}</main>
+      <Footer />
     </>
-  )
-}
+  );
+};
 
-export default MainLayout
+export default MainLayout;

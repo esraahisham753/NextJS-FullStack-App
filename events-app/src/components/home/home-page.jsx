@@ -1,19 +1,29 @@
 import Link from "next/link";
 import Image from "next/image";
 
-const HomePage = ({data}) => {
+const HomePage = ({ data }) => {
   return (
-    <main>
+    <section className="home_body">
       {data.map((ev) => {
         return (
-          <Link key={ev.id} href={`/events/${ev.id}`}>
-            <Image src={ev.image} alt={ev.title} width={300} height={300} />
-            <h2>{ev.title}</h2>
-            <p>{ev.description}</p>
+          <Link className="card" key={ev.id} href={`/events/${ev.id}`}>
+            <div className="image">
+              <Image
+                className="card-img"
+                src={ev.image}
+                alt={ev.title}
+                width={300}
+                height={300}
+              />
+            </div>
+            <div className="content">
+              <h2>{ev.title}</h2>
+              <p>{ev.description}</p>
+            </div>
           </Link>
         );
       })}
-    </main>
+    </section>
   );
 };
 

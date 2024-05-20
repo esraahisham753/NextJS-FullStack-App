@@ -1,11 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
-import logo from "./background.jpg";
+import logo from "./logo.png";
 
 const Header = () => (
   <header>
     <div className="topNav">
-      <Image src={logo} alt="logo" width={50} height={50} />
+      <Link href="/" className="topNav-brand">
+        <Image src={logo} alt="logo" width={100} height={100} />
+        <h1>ESEVENTS</h1>
+      </Link>
       <nav>
         <ul>
           <li>
@@ -20,7 +23,7 @@ const Header = () => (
         </ul>
       </nav>
     </div>
-    <h1>Es-Events App</h1>
+    <h2>Register for your favorite events</h2>
   </header>
 );
 
