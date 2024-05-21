@@ -1,12 +1,8 @@
-import Image from "next/image";
+import EventCard from "@/src/components/events/eventCard";
 
 const EventPage = ({ event }) => {
   return (
-    <div>
-      <Image src={event.image} alt={event.title} width={1000} height={300} />
-      <h1>{event.title}</h1>
-      <p>{event.description}</p>
-    </div>
+    <EventCard event={event} />
   );
 };
 
