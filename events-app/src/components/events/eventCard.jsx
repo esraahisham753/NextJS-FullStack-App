@@ -1,8 +1,11 @@
 import Image from "next/image";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/router";
 
 const EventCard = ({ event }) => {
+  const [error, setError] = useState(false);
+  const [message, setMessage] = useState("");
+
   const inputEmail = useRef();
   const router = useRouter();
 
@@ -10,6 +13,19 @@ const EventCard = ({ event }) => {
     e.preventDefault();
     const emailValue = inputEmail.current.value;
     const eventId = router.query.id;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailValue.match(emailRegex)) {
+      setMessage("Please, provide a correct email");
+      setError(true);
+
+      setTimeout(() => {
+        setMessage("");
+        setError(false);
+      }, 3000);
+
+      return;
+    }
 
     try {
       const response = await fetch("/api/email_registration", {
@@ -28,8 +44,16 @@ const EventCard = ({ event }) => {
 
       const data = await response.json();
       console.log("DATA: ", data);
+      setMessage("Email added successfully");
+      setTimeout(() => setMessage(""), 3000);
     } catch (error) {
       console.log("ERROR: ", error);
+      setMessage("ERROR: " + error);
+      setError(true);
+      setTimeout(() => {
+        setMessage("");
+        setError(false);
+      }, 3000);
     }
   };
 
@@ -54,6 +78,9 @@ const EventCard = ({ event }) => {
         />
         <button type="submit">Submit</button>
       </form>
+      <p className={!message ? "" : error ? "errMsg" : "successMsg"}>
+        {message}
+      </p>
     </div>
   );
 };
