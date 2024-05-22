@@ -15,14 +15,14 @@ const EventCard = ({ event }) => {
     const eventId = router.query.id;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!emailValue.match(emailRegex)) {
+    if (!email | !emailValue.match(emailRegex)) {
       setMessage("Please, provide a correct email");
       setError(true);
 
       setTimeout(() => {
         setMessage("");
         setError(false);
-      }, 3000);
+      }, 5000);
 
       return;
     }
@@ -39,7 +39,8 @@ const EventCard = ({ event }) => {
       inputEmail.current.value = "";
 
       if (!response.ok) {
-        throw new Error("Error: " + response.status);
+        const resp = await response.json();
+        throw new Error(resp.message);
       }
 
       const data = await response.json();
@@ -47,13 +48,13 @@ const EventCard = ({ event }) => {
       setMessage("Email added successfully");
       setTimeout(() => setMessage(""), 3000);
     } catch (error) {
-      console.log("ERROR: ", error);
-      setMessage("ERROR: " + error);
+      //console.log("ERROR: ", error);
+      setMessage("" + error);
       setError(true);
       setTimeout(() => {
         setMessage("");
         setError(false);
-      }, 3000);
+      }, 5000);
     }
   };
 

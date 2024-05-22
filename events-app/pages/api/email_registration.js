@@ -24,6 +24,12 @@ export default function handler(req, res) {
   if (method === "POST") {
     const { email, eventId } = req.body;
 
+    if (!email | !eventId) {
+      return res
+        .status(400)
+        .json({ message: "Please, provide your email and event id" });
+    }
+
     const currentEvent = allEvents.find((ev) => ev.id === eventId);
 
     if (!currentEvent) {
