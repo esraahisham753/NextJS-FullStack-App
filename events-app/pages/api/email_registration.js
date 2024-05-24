@@ -24,7 +24,7 @@ export default async function handler(req, res) {
     }
 
     if (document.emails_registered.includes(email)) {
-      return res.status(400).json({message: "Email"})
+      return res.status(400).json({message: "Email already exists"})
     }
 
     const result = await db.collection("events").updateOne(
