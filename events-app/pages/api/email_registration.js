@@ -1,71 +1,48 @@
-import path from "path";
-import fs from "fs";
+import clientPromise from "../../lib/mongodb";
 
-function buildPath() {
-  return path.join(process.cwd(), "data", "data.json");
-}
-
-function extractData(filePath) {
-  const jsonData = fs.readFileSync(filePath);
-  const data = JSON.parse(jsonData);
-  return data;
-}
-
-export default function handler(req, res) {
-  const { method } = req;
-
-  const path = buildPath();
-  const { events_categories, allEvents } = extractData(path);
-
-  if (!allEvents) {
-    return res.status(404).json({ message: "No events have been found" });
+export default async function handler(req, res) {
+  if (req.method !== "POST") {
+    res.setHeader("Allow", ["POST"]);
+    return res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 
-  if (method === "POST") {
+  try {
+    const client = await clientPromise;
+    const db = client.db("events"); // Assume you're updating by some identifier
     const { email, eventId } = req.body;
 
-    if (!email | !eventId) {
-      return res
-        .status(400)
-        .json({ message: "Please, provide your email and event id" });
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!email | !email.match(emailRegex)) {
+      return res.status(400).json({ message: "Not a valid email" });
     }
 
-    const currentEvent = allEvents.find((ev) => ev.id === eventId);
+    const document = await db.collection("events").findOne({ id: eventId });
 
-    if (!currentEvent) {
-      return res
-        .status(404)
-        .json({ message: `Not Found. No event found with id: ${eventId}` });
+    if (!document) {
+      return res.status(404).json({ message: "Document not found" });
     }
 
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!emailPattern.test(email)) {
-      return res
-        .status(400)
-        .json({ message: `Bad Request. email: ${email} is not valid` });
+    if (document.emails_registered.includes(email)) {
+      return res.status(400).json({message: "Email"})
     }
 
-    if (currentEvent.emails_registered.includes(email)) {
-      return res
-        .status(409)
-        .json({ message: `Bad request. email: ${email} already exists` });
-    }
-
-    const newAllEvents = allEvents.map((ev) => {
-      if (ev.id === eventId) {
-        return { ...ev, emails_registered: [...ev.emails_registered, email] };
+    const result = await db.collection("events").updateOne(
+      { id: eventId },
+      {
+        $set: {
+          emails_registered: [...document.emails_registered, email],
+        },
       }
-      return ev;
-    });
-
-    fs.writeFileSync(
-      path,
-      JSON.stringify({ events_categories, allEvents: newAllEvents })
     );
 
-    res.status(200).json({
-      message: `Email: ${email}  registered successfully in event: ${eventId}`,
-    });
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ message: "Document not found" });
+    }
+
+    res.status(200).json({ message: "Document updated successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 }
